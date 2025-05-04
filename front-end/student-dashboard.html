@@ -106,7 +106,7 @@
       document.body.classList.toggle("light", !isDark);
       localStorage.setItem("theme", isDark ? "dark" : "light");
     });  
-
+    /*
     function generateCards(count) {
     const container = document.getElementById("cardsContainer");
     container.innerHTML = ""; // Clear existing cards
@@ -125,7 +125,28 @@
         container.appendChild(card);
         }
     }
+    */
+    // this should be contain with the names of the cards
+    const names = ["Alice", "Bob", "Charlie", "Diana"]; // Example array
 
+    function generateCards(count) {
+        const container = document.getElementById("cardsContainer");
+        container.innerHTML = ""; // Clear existing cards
+
+        for (let i = 0; i < count; i++) {
+            const card = document.createElement("div");
+            card.className = "card";
+            card.innerHTML = `
+            <div class="innerCard">            
+                <div>
+                    <h3>${names[i] || "Unnamed"}</h3>
+                    <p class="totalStudents">ERROR</p>
+                </div>
+            </div>
+            `;
+            container.appendChild(card);
+        }
+    }
     // count of the cards
     const backendCardCount = 3; 
     generateCards(backendCardCount);
