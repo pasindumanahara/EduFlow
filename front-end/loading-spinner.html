@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Donut Spinners</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      gap: 50px;
+      background-color: #111;
+    }        
+    .container {
+    position: relative;
+    width: 70px; /* match largest spinner */
+    height: 70px;
+    }
+
+    .spinner1,
+    .spinner2 {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    }
+
+    /* Spinner 1: Half-rounded donut */
+    .spinner1 {
+    width: 50px;
+    height: 50px;
+    border-top: 6px solid #408c96;
+    border-right: 6px solid #408c96;
+    animation: spin 1.2s linear infinite;
+    }
+
+    /* Spinner 2: Cut donut */
+    .spinner2 {
+    width: 70px;
+    height: 70px;
+    border-top: 6px solid #5cd4e4;
+    border-right: 6px solid #5cd4e4;
+    animation: spinreverse 1s linear infinite;
+    }
+
+    @keyframes spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
+    @keyframes spinreverse {
+    0% { transform: translate(-50%, -50%) rotate(360deg); }
+    100% { transform: translate(-50%, -50%) rotate(0deg); }
+    }
+  </style>
+</head>
+<body>
+    <div class="container">
+        <div class="spinner1"></div>
+        <div class="spinner2"></div>
+    </div>
+</body>
+</html>
+

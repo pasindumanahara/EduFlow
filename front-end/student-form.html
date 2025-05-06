@@ -85,12 +85,10 @@
   </div>
   <!--Popup screen-->
   <div id="success-popup">
-    <h1>Registration Successful!</h1>
-    <h4 style="color: white; margin-bottom: 0px;">Your submission was successful.</h4>
-    <h4 style="color: white;">User registered!</h4>
+    <h1>Registration Successful!</h1> 
     <p id="username"></p>
     <p id="password"></p>
-    <button onclick="window.location.href='login.html'">Login</button>
+    <button onclick="window.location.href='student-form.html'">Send Activation Email</button>
   </div>
 
   <script>
@@ -99,7 +97,7 @@
       const container = document.querySelector('.form-container');
       const loadingScreen = document.getElementById('loading-screen');
       const successPopup = document.getElementById('success-popup');
-      const popUpP1 = document.getElementById('popUpP1');
+      
 
       formElement.addEventListener('submit', function (e) {
         e.preventDefault();
@@ -116,7 +114,7 @@
 
         // Update popup message
         username.textContent = `Username: ${userName}`;
-        password.textContent = 'Password: Your NIC Number';
+        password.textContent = 'Password: NIC Number';
         // Show loading screen
         container.classList.add('blurred');
         loadingScreen.style.display = 'flex';
@@ -126,6 +124,7 @@
           successPopup.style.display = 'flex';
         }, 3000);
       });
+      // need to setup send activation email
 
 
   </script>
@@ -277,8 +276,8 @@
     .spinner1 {
     width: 50px;
     height: 50px;
-    border-top: 6px solid #5cd4e4;
-    border-right: 6px solid #5cd4e4;
+    border-top: 6px solid #408c96;
+    border-right: 6px solid #408c96;
     animation: spin 1.2s linear infinite;
     }
 
