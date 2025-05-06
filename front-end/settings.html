@@ -3,24 +3,79 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Profile Page</title>
+  <title>User Profile</title>  
+</head>
+<body>
+  <div class="main-content">
+    <div class="btn-container">
+      <button id="back" onclick="window.location.href= 'student-dashboard.html'">⬅ Dashboard</button>      
+    </div>
+
+    <div class="center-wrapper">
+      <div class="profile-container">
+        <img src="../resources/malepp.jpg" alt="Profile Picture" />
+        <h4 id="username_heading"></h4>
+      </div>
+      
+
+      <div class="user-detils">
+        <div class="form-row">
+          <label for="fullname">Full Name</label>
+          <input type="text" id="fullname" readonly/>
+        </div>
+        <div class="form-row">
+            <label for="gender">Gender</label>
+            <input type="text" id="gender" readonly/>
+          </div>
+        <div class="form-row">
+          <label for="email">Email</label>
+          <input type="email" id="email" readonly/>
+        </div>
+        <div class="form-row">
+          <label for="contact">Contact Info.</label>
+          <input type="text" id="contact" />
+        </div>
+        <div class="form-row">
+          <label for="about">Address</label>
+          <textarea id="about"></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="submitBtn">
+        <button onclick="">Submit Changes</button>
+    </div>
+  </div>
+  <script>
+    const fullname = document.getElementById('fullname');
+    fullname.value = 'Pasindu Manahara';
+    const username_heading = document.getElementById('username_heading');
+    username_heading.textContent = 'Pasindu Manahara';
+    // need to add the function of the submit button and other auto querry filling stuff
+
+  </script>
   <style>
     body {
       margin: 0;
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #1e1e2f;
-      color: #fff;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;         
       min-height: 100vh;
+      background-color: #2e2e3e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
     }
 
-    .main-content {
-      color: #fff;
-      margin: 27px auto;
+    .main-content {        
+      color: #2e2e3e;
+      align-items: center;
+      margin:  70px auto;
       padding: 20px;
-      background-color: #2c2c3e;
+      background-color: #e6e6ec;
       border-radius: 8px;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
       max-width: 800px;
+
     }
 
     .btn-container {
@@ -31,7 +86,7 @@
     .btn-container button {
       font-size: 1.2rem;
       width: 40%;
-      max-width: 250px;
+      max-width: 275px;
       padding: 12px;
       border: none;
       border-radius: 6px;
@@ -48,15 +103,16 @@
     .center-wrapper {
       display: flex;
       flex-direction: column;
-      align-items: center;
+      align-items: center;      
     }
 
     .profile-container {
       display: flex;
       flex-direction: row;
       align-items: center;
+      justify-content: center;
       gap: 15px;
-      margin-bottom: 30px;      
+      margin-bottom: 50px;      
     }
 
     .profile-container img {
@@ -65,12 +121,12 @@
       height: 150px;
       border-radius: 50%;
       object-fit: cover;
-      border: 2px solid #ccc;
+      border: 2px solid #6d6d6d96;
     }
 
     .profile-container h4 {
       display: inline;
-      font-weight: 300;
+      font-weight: 400;
       font-size: 30px;
       margin: 0;
     }
@@ -84,6 +140,7 @@
     }
 
     .form-row {
+        margin: auto;
       display: flex;
       align-items: center;
       gap: 10px;
@@ -98,7 +155,7 @@
     .form-row input,
     .form-row textarea {
       flex: 1;
-      max-width: 450px;
+      max-width: 300px;
       padding: 8px 10px;
       font-size: 14px;
       background-color: #f2f2f7;
@@ -108,6 +165,31 @@
       outline: none;
     }
 
+    .submitBtn {
+      margin-top: 30px;
+      text-align: center;
+      margin-bottom: 20px;
+      margin-right: auto;
+      margin-left: auto;
+      min-width: 425px;
+    }
+
+    .submitBtn button {
+      font-size: 1.2rem;
+      width: 40%;
+      max-width: 250px;
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      background-color: #3498db;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .submitBtn button:hover {
+      background-color: #2980b9;
+    }
     @media (max-width: 768px) {
       .form-row {
         flex-direction: column;
@@ -124,42 +206,14 @@
       }
 
       .user-detils {
-        padding: 0;
+        padding: 0;             
+      }
+      .profile-container{
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
     }
   </style>
-</head>
-<body>
-  <div class="main-content">
-    <div class="btn-container">
-      <button id="back" onclick="window.location.href= 'studentDashboard.html'">⬅ Dashboard</button>      
-    </div>
-
-    <div class="center-wrapper">
-      <div class="profile-container">
-        <img src="user.jpg" alt="Profile Picture" />
-        <h4>Pasindu Manahara</h4>
-      </div>
-
-      <div class="user-detils">
-        <div class="form-row">
-          <label for="fullname">Full Name</label>
-          <input type="text" id="fullname" />
-        </div>
-        <div class="form-row">
-          <label for="email">Email</label>
-          <input type="email" id="email" />
-        </div>
-        <div class="form-row">
-          <label for="contact">Contact Info.</label>
-          <input type="text" id="contact" />
-        </div>
-        <div class="form-row">
-          <label for="about">About</label>
-          <textarea id="about"></textarea>
-        </div>
-      </div>
-    </div>
-  </div>
 </body>
 </html>
