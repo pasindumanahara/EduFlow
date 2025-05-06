@@ -4,6 +4,131 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Student Registration Form</title>
+  
+</head>
+<body class="dark">
+  <div class="form-container">
+    <h2>Student Registration Form</h2>
+    <form onsubmit="displayUserData(event)">
+      <div class="form-group" style="display: flex; gap: 12px;">
+        <div style="flex: 1;">
+          <label for="fname">First Name</label>
+          <input type="text" id="fname" name="fname" placeholder="John"  required/>
+        </div>
+        <div style="flex: 1;">
+          <label for="lname">Last Name</label>
+          <input type="text" id="lname" name="lname" placeholder="Doe" required />
+        </div>
+      </div>
+
+      <div class="form-group" style="display: flex; gap: 12px;">
+        <div style="flex: 1;">
+            <label for="contactInfo">Contact Information</label>
+            <input type="tel" id="contactInfo" name="contactInfo" placeholder="+94 123-4567"  required/>
+        </div>
+        <div style="flex: 1;">
+            <label for="nicNumber">NIC Number</label>
+            <input type="text" id="nicNumber"  placeholder="xxxxxxxxxxxx"  required/>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" placeholder="john@example.com" required />
+      </div>
+
+      <div class="form-group">
+        <label for="address">Address</label>
+        <textarea id="address" name="address" placeholder="123 Main St, City, Country" required></textarea>
+      </div>
+      <div class="form-group">
+        <label for="gender_select">Gender</label>
+        <select id="gender" name="gender_select" required>
+          <option value="" disabled selected>Select Gender</option>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+          <option value="other">Other</option>
+        </select>
+
+      </div>
+      <h4>Education Information</h4>
+      <div class="form-group">
+        <label for="educationQualifications">Maximum Qualification</label>
+        <select id="educationQualifications" name="educationQualifications" required>
+          <option value="" disabled selected>Select Qualification</option>
+          <optgroup label="Ordinary Level">
+            <option value="ol">Ordinary Level Only</option>
+          </optgroup>
+          <optgroup label="Advanced Level Qualified">
+            <option value="al_bio">AL - Bio Scheme</option>
+            <option value="al_maths">AL - Maths Scheme</option>
+            <option value="al_arts">AL - Arts Scheme</option>
+            <option value="al_comm">AL - Commerce Scheme</option>
+            <option value="al_tech">AL - Technology Scheme</option>
+          </optgroup>
+          <optgroup label="University Level">
+            <option value="uni_general">University - General Degree</option>
+            <option value="uni_msc">University - MSc Degree</option>
+            <option value="uni_mphil">University - MPhil Degree</option>
+            <option value="uni_phd">University - PhD Degree</option>
+          </optgroup>
+        </select>
+      </div>
+
+      <button type="submit">Submit</button>
+    </form>
+  </div>
+  <!--loading screen-->
+  <div class="container" id="loading-screen">
+    <div class="spinner1"></div>
+    <div class="spinner2"></div>
+  </div>
+  <!--Popup screen-->
+  <div id="success-popup">
+    <h1>Registration Successful!</h1>
+    <h4 style="color: white; margin-bottom: 0px;">Your submission was successful.</h4>
+    <h4 style="color: white;">User registered!</h4>
+    <p id="username"></p>
+    <p id="password"></p>
+    <button onclick="window.location.href='login.html'">Login</button>
+  </div>
+
+  <script>
+
+      const formElement = document.querySelector('form');
+      const container = document.querySelector('.form-container');
+      const loadingScreen = document.getElementById('loading-screen');
+      const successPopup = document.getElementById('success-popup');
+      const popUpP1 = document.getElementById('popUpP1');
+
+      formElement.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const fname = document.getElementById('fname').value;
+        const lname = document.getElementById('lname').value;
+        const contactInfo = document.getElementById('contactInfo').value;
+        const email = document.getElementById('email').value;
+        const address = document.getElementById('address').value;
+        const qualification = document.getElementById('educationQualifications').value;
+        const userName = `${fname}${lname}@eduflow.com`;
+
+        console.log({ fname, lname, contactInfo, email, address, qualification });
+
+        // Update popup message
+        username.textContent = `Username: ${userName}`;
+        password.textContent = 'Password: Your NIC Number';
+        // Show loading screen
+        container.classList.add('blurred');
+        loadingScreen.style.display = 'flex';
+
+        setTimeout(() => {
+          loadingScreen.style.display = 'none';
+          successPopup.style.display = 'flex';
+        }, 3000);
+      });
+
+
+  </script>
   <style>
     * {
     box-sizing: border-box;
@@ -79,6 +204,7 @@
     }
 
     button {
+    margin-top: 20px;
     width: 100%;
     background-color: #5b73f2;
     color: white;
@@ -102,6 +228,9 @@
     }
     #educationQualifications{
         width: 50%;
+    }
+    #gender{
+      width: 50%;
     }
 
     /* pop up and loading */
@@ -198,122 +327,6 @@
     }
 
 </style>
-  
-</head>
-<body class="dark">
-  <div class="form-container">
-    <h2>Student Registration Form</h2>
-    <form onsubmit="displayUserData(event)">
-      <div class="form-group" style="display: flex; gap: 12px;">
-        <div style="flex: 1;">
-          <label for="fname">First Name</label>
-          <input type="text" id="fname" name="fname" placeholder="John"  required/>
-        </div>
-        <div style="flex: 1;">
-          <label for="lname">Last Name</label>
-          <input type="text" id="lname" name="lname" placeholder="Doe" required />
-        </div>
-      </div>
-
-      <div class="form-group" style="display: flex; gap: 12px;">
-        <div style="flex: 1;">
-            <label for="contactInfo">Contact Information</label>
-            <input type="tel" id="contactInfo" name="contactInfo" placeholder="+94 123-4567"  required/>
-        </div>
-        <div style="flex: 1;">
-            <label for="nicNumber">NIC Number</label>
-            <input type="text" id="nicNumber"  placeholder="xxxxxxxxxxxx"  required/>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="email">Email</label>
-        <input type="email" id="email" name="email" placeholder="john@example.com" required />
-      </div>
-
-      <div class="form-group">
-        <label for="address">Address</label>
-        <textarea id="address" name="address" placeholder="123 Main St, City, Country" required></textarea>
-      </div>
-
-      <h4>Education Information</h4>
-      <div class="form-group">
-        <label for="educationQualifications">Maximum Qualification</label>
-        <select id="educationQualifications" name="educationQualifications" required>
-          <option value="" disabled selected>Select Qualification</option>
-          <optgroup label="Ordinary Level">
-            <option value="ol">Ordinary Level Only</option>
-          </optgroup>
-          <optgroup label="Advanced Level Qualified">
-            <option value="al_bio">AL - Bio Scheme</option>
-            <option value="al_maths">AL - Maths Scheme</option>
-            <option value="al_arts">AL - Arts Scheme</option>
-            <option value="al_comm">AL - Commerce Scheme</option>
-            <option value="al_tech">AL - Technology Scheme</option>
-          </optgroup>
-          <optgroup label="University Level">
-            <option value="uni_general">University - General Degree</option>
-            <option value="uni_msc">University - MSc Degree</option>
-            <option value="uni_mphil">University - MPhil Degree</option>
-            <option value="uni_phd">University - PhD Degree</option>
-          </optgroup>
-        </select>
-      </div>
-
-      <button type="submit">Submit</button>
-    </form>
-  </div>
-  <!--loading screen-->
-  <div class="container" id="loading-screen">
-    <div class="spinner1"></div>
-    <div class="spinner2"></div>
-  </div>
-  <!--Popup screen-->
-  <div id="success-popup">
-    <h1>Registration Successful!</h1>
-    <h4 style="color: white; margin-bottom: 0px;">Your submission was successful.</h4>
-    <h4 style="color: white;">User registered!</h4>
-    <p id="username"></p>
-    <p id="password"></p>
-    <button onclick="window.location.href='login.html'">Login</button>
-  </div>
-
-  <script>
-
-      const formElement = document.querySelector('form');
-      const container = document.querySelector('.form-container');
-      const loadingScreen = document.getElementById('loading-screen');
-      const successPopup = document.getElementById('success-popup');
-      const popUpP1 = document.getElementById('popUpP1');
-
-      formElement.addEventListener('submit', function (e) {
-        e.preventDefault();
-
-        const fname = document.getElementById('fname').value;
-        const lname = document.getElementById('lname').value;
-        const contactInfo = document.getElementById('contactInfo').value;
-        const email = document.getElementById('email').value;
-        const address = document.getElementById('address').value;
-        const qualification = document.getElementById('educationQualifications').value;
-        const userName = `${fname}${lname}@eduflow.com`;
-
-        console.log({ fname, lname, contactInfo, email, address, qualification });
-
-        // Update popup message
-        username.textContent = `Username: ${userName}`;
-        password.textContent = 'Password: Your NIC Number';
-        // Show loading screen
-        container.classList.add('blurred');
-        loadingScreen.style.display = 'flex';
-
-        setTimeout(() => {
-          loadingScreen.style.display = 'none';
-          successPopup.style.display = 'flex';
-        }, 3000);
-      });
-
-
-  </script>
   
 </body>
 </html>
