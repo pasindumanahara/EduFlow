@@ -648,7 +648,7 @@
           position: relative;
           display: inline-block;
           width: 60px;
-          height: 30px;
+          height: 34px;
         }
 
         .switch input {
@@ -661,7 +661,7 @@
           position: absolute;
           top: 0; left: 0;
           right: 0; bottom: 0;
-          background: hsl(24, 23%, 50%); /* soft light brown */
+          background: #9d7a62; /* soft light brown */
           border-radius: 40px;
           cursor: pointer;
           transition: background 0.4s ease-in-out;
@@ -670,11 +670,12 @@
         .slider::before {
           content: "☀︎"; /* Light Mode Symbol */
           position: absolute;
-          height: 25px; width: 25px;
-          left: 4px; top: 2px;
-          background-color: white;
+          height: 27px; width: 27px;
+          left: 4px; top: 3.5px;
+          color: rgb(61, 61, 61);
+          background-color: hsl(24, 23%, 85%);          
           border-radius: 50%;
-          display: flex;
+          display: flex;          
           align-items: center;
           justify-content: center;
           font-size: 1.2rem;
@@ -683,14 +684,14 @@
         }
 
         input:checked + .slider {
-          background: #4b6cb7; /* deep blue */
+          background: hsl(222, 43%, 46%); /* deep blue */
         }
 
         input:checked + .slider::before {
           content: "☾"; /* Dark Mode Symbol */
           color: black;
-          transform: translateX(28px);
-          background-color: #fff;
+          transform: translateX(26px);
+          background-color: hsl(222, 100%, 80%);
         }
 
         /* chart */
