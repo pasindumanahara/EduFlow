@@ -11,7 +11,7 @@
 
   <div class="sidebar" id="sidebar">
     <div class="logo">
-      <img src="logo.png">
+      <img src="../resources/logo.png">
     </div>   
 
     <div class="menu-section">
@@ -412,31 +412,113 @@
 
        
 
-        /* dark light switch */
+        /*  light theme */
         body.light {
-        background-color: #f0f2f5; /* soft, clean light background */     
-        transition: background 0.5s, color 0.5s;
+          background-color: hsl(32, 44%, 78%); /* warm dimmed white */
+          color: #3b2f2f;
+
         }
-        body.light h1{
-        color: #1e1e2f;
+        
+        body.light .sidebar {
+          background-color: hsl(27, 25%, 28%); /* darker, earthy brown */
+          border-right: 1px solid #3e2f25;
         }
-        body.light .admin{
-        color: #1e1e2f;
+        body.light .top-bar h1{
+          color: #2e231b;
+        }
+        body.light .top-bar{
+          color: #2e231b;
+        }
+
+        body.light .top-bar .admin{
+          color: #2e231b;
+        }
+
+
+        body.light .sidebar h2 {
+          color: #f3ece7;
+        }
+
+        body.light .sidebar a {
+          color: #e0d6cc;
+        }
+
+        body.light .sidebar a:hover,
+        body.light .sidebar a.active {
+          background-color: #7a5e4d; /* slightly lighter brown on hover */
+          border-left: 4px solid #c69c6d;
+          color: #ffffff;
+        }
+
+        body.light .logo {
+          background-color: #5a4636;
+          border-bottom: 1px solid #3e2f25;
+        }
+
+        body.light .menu-title {
+          background-color: hsl(27, 25%, 32%);
+          color: #f3ece7;
+        }
+
+        body.light .menu-title:hover,
+        body.light .menu-title a.active {
+          background-color: hsl(23, 23%, 39%);
+          border-left: 4px solid #c69c6d;
+          color: #ffffff;
+        }
+
+        body.light .menu-content {
+          background-color: hsl(24, 23%, 26%);
+        }
+
+        body.light .menu-content a {
+          color: hsl(28, 36%, 91%);
+        }
+
+        body.light .menu-content a:hover {
+          background-color: #7a5e4d;
+        }
+
+        body.light .static-links a {
+          color: #f0e7df;
+          border-bottom: 1px solid #3e2f25;
+        }
+
+        body.light .static-links a:hover {
+          background-color: #7a5e4d;
+        }
+
+        body.light .sidebar-footer {
+          border-top: 1px solid #3e2f25;
+        }
+
+        body.light .sidebar-footer a {
+          color: #e0d6cc;
+        }
+
+        body.light .sidebar-footer a:hover {
+          background-color: #7a5e4d;
         }
         body.light .card {
-        background-color: #dce3ec;         /* classic clean card */
-        border-radius: 12px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.164);
+          background-color: #6a5242; /* warm brown tone */
+          color: #f3ece7;
+          border-radius: 12px;
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
         }
 
         body.light .card h3 {
-        color: #1e2a38;                    /* desaturated navy */
+          color: #fdf9f6; /* near-white, clear heading */
         }
 
         body.light .card p {
-        color: #2f77b3;                    /* calm, web-safe blue */
+          color: #ffdb9b; /* warm gold-brown stat color */
         }
-
+        body.light .mobile-toggle{
+          background-color: #6a5242;
+          color: #fdf9f6;
+        }
+        
+        /* back to dark theme*/
 
         body.dark {
         background: #1e1e2f;
@@ -452,7 +534,7 @@
         position: relative;
         display: inline-block;
         width: 60px;
-        height: 30px;
+        height: 34px;
         }
 
         .switch input {
@@ -462,41 +544,41 @@
         }
 
         .slider {
-        position: absolute;
-        top: 0; left: 0;
-        right: 0; bottom: 0;
-        background: #cce7ff; /* soft light blue */
-        border-radius: 40px;
-        cursor: pointer;
-        transition: background 0.4s ease-in-out;
+          position: absolute;
+          top: 0; left: 0;
+          right: 0; bottom: 0;
+          background: #9d7a62; /* soft light brown */
+          border-radius: 40px;
+          cursor: pointer;
+          transition: background 0.4s ease-in-out;
         }
 
         .slider::before {
-        content: "☀︎"; /* Light Mode Symbol */
-        position: absolute;
-        height: 25px; width: 25px;
-        left: 4px; top: 2px;
-        background-color: white;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.2rem;
-        transition: transform 0.4s ease-in-out, background 0.4s;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+          content: "☀︎"; /* Light Mode Symbol */
+          position: absolute;
+          height: 27px; width: 27px;
+          left: 4px; top: 3.5px;
+          color: rgb(61, 61, 61);
+          background-color: hsl(24, 23%, 85%);          
+          border-radius: 50%;
+          display: flex;          
+          align-items: center;
+          justify-content: center;
+          font-size: 1.2rem;
+          transition: transform 0.4s ease-in-out, background 0.4s;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.3);
         }
 
         input:checked + .slider {
-        background: #4b6cb7; /* deep blue */
+          background: hsl(222, 43%, 46%); /* deep blue */
         }
 
         input:checked + .slider::before {
-        content: "☾"; /* Dark Mode Symbol */
-        color: black;
-        transform: translateX(28px);
-        background-color: #fff;
+          content: "☾"; /* Dark Mode Symbol */
+          color: black;
+          transform: translateX(26px);
+          background-color: hsl(222, 100%, 80%);
         }
-
         
   </style>
 </body>
