@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>User Data Table</title>  
+</head>
+<body class="dark">
+  <div class="header_container">
+    <button id="backBtn" onclick="window.location.href='admin-dashboard.html'">🡰</button>
+    <h4>Student List</h4>
+  </div>
+  <div class="controls">
+    <!-- You can add buttons/headers here -->
+    <select id="sortSelect">
+        <option value="">Sort by</option>
+        <option value="name">Name</option>
+        <option value="joined">Joined Date</option>
+      </select>
+    <div class="search_elements">
+        <input type="text" id="searchBar" placeholder="Search..." />
+        <button id="searchBtn">Search</button>
+    </div>  
+  </div>
+
+  <table id="userTable">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>NIC</th>
+        <th>Gender</th>
+        <th>Joined</th>
+        <th>Contact</th>
+        <th>Qualification</th>
+      </tr>
+    </thead>
+    <tbody id="userTableBody">
+      <!-- Sample test user -->
+      <tr>
+        <td>1</td>
+        <!-- took the obj directly again for ez data load for the popup -->
+         <!-- CUSTOMIZE THIS THE WAY U WANT NOT WORKING PERFECTLY
+         this is example php data extracting goes in between table data
+            <?php
+            // Example PHP snippet to load data
+            // Replace this with your DB connection & query
+
+            include 'db.php';
+            $result = $db->query("SELECT * FROM users");
+            while($row = $result->fetch_assoc()) {
+                echo "<tr>
+                        <td>{$row['id']}</td>
+                        <td><span class='name-link' onclick='showPopup(" . json_encode($row) . ")'>{$row['name']}</span></td>
+                        <td>{$row['email']}</td>
+                        <td>{$row['nic']}</td>
+                        <td>{$row['gender']}</td>
+                        <td>{$row['joined']}</td>
+                        <td>{$row['contact']}</td>
+                        <td>{$row['qualification']}</td>
+                    </tr>";
+            }
+
+            ?> */
+            -->
+
+        <td><span class="name-link" onclick='showPopup({
+          "id": "1",
+          "name": "Jane Doe",
+          "email": "jane@example.com",
+          "nic": "991234567V",
+          "gender": "Female",
+          "joined": "2023-06-01",
+          "contact": "+94712345678",
+          "qualification": "BSc in IT",
+          "address": "123 Main Street, Colombo"
+        })'>Jane Doe</span></td>
+        <td>jane@example.com</td>
+        <td>991234567V</td>
+        <td>Female</td>
+        <td>2023-06-01</td>
+        <td>+94712345678</td>
+        <td>BSc in IT</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td><span class='name-link' onclick='showPopup({
+          "id": 2,
+          "name": "Bob Thomas",
+          "email": "bob@example.com",
+          "nic": "882223334V",
+          "gender": "Male",
+          "joined": "2023-04-12",
+          "contact": "+94712345670",
+          "qualification": "BSc IT"
+        })'>Bob Thomas</span></td>
+        <td>bob@example.com</td>
+        <td>882223334V</td>
+        <td>Male</td>
+        <td>2023-04-12</td>
+        <td>+94712345670</td>
+        <td>BSc IT</td>
+      </tr>      
+      <tr>
+        <td>3</td>
+        <td><span class='name-link' onclick='showPopup({
+          "id": 3,
+          "name": "Carla Mendes",
+          "email": "carla@example.com",
+          "nic": "993334455V",
+          "gender": "Female",
+          "joined": "2022-11-25",
+          "contact": "+94778901234",
+          "qualification": "MSc Computer Science"
+        })'>Carla Mendes</span></td>
+        <td>carla@example.com</td>
+        <td>993334455V</td>
+        <td>Female</td>
+        <td>2022-11-25</td>
+        <td>+94778901234</td>
+        <td>MSc Computer Science</td>
+      </tr>
+      
+    </tbody>
+  </table>
+
+  <!-- Popup background blur overlay -->
+  <div class="overlay" id="overlay"></div>
+
+  <!-- Popup Window -->
+  <div class="popup" id="popup">
+    <div class="popup-header">
+      <h3>Student Info</h3>
+      <button class="closeBtn" onclick="closePopup()">X</button>
+    </div>
+    <div class="popup-content" id="popupContent">
+      <!-- Content loaded via JS -->
+    </div>
+    <div class="popupBtns" style="margin-top: 15px; text-align: right;">
+        <button id="deleteBtn">Delete</button>
+        <div>
+            <button id="editBtn">Edit</button>
+            <button id="saveBtn">Save</button>
+        </div> 
+    </div>
+  </div>
+
+  <script>
+    function showPopup(user) {
+      const content = document.getElementById('popupContent');
+      content.innerHTML = `
+        <div class="form-row">
+          <label>ID</label>
+          <input type="text" value="${user.id}" readonly />
+        </div>
+        <div class="form-row">
+          <label>Full Name</label>
+          <input type="text" value="${user.name}" readonly />
+        </div>
+        <div class="form-row">
+          <label>Email</label>
+          <input type="text" value="${user.email}" readonly />
+        </div>
+        <div class="form-row">
+          <label>NIC</label>
+          <input type="text" value="${user.nic}" readonly />
+        </div>
+        <div class="form-row">
+          <label>Gender</label>
+          <input type="text" value="${user.gender}" readonly />
+        </div>
+        <div class="form-row">
+          <label>Joined Date</label>
+          <input type="text" value="${user.joined}" readonly />
+        </div>
+        <div class="form-row">
+          <label>Contact</label>
+          <input type="text" value="${user.contact}" />
+        </div>
+        <div class="form-row">
+          <label>Qualification</label>
+          <input type="text" value="${user.qualification}" readonly />
+        </div>
+        <div class="form-row">
+          <label>Address</label>
+          <textarea readonly>${user.address}</textarea>
+        </div>
+        <!-- Add more editable or read-only fields here -->
+      `;
+      document.getElementById('overlay').style.display = 'block';
+      document.getElementById('popup').style.display = 'block';
+    }
+
+    function closePopup() {
+      document.getElementById('popup').style.display = 'none';
+      document.getElementById('overlay').style.display = 'none';
+    }
+    // toggle between dark and light theme
+    const savedTheme = localStorage.getItem("theme") || "dark";
+    const isDark = savedTheme === "dark";
+    document.body.classList.add(savedTheme);
+    document.body.classList.remove(savedTheme === "dark" ? "light" : "dark");
+    toggle.checked = isDark;
+    updateThemeAndChart(isDark);
+
+    // Toggle handler
+    toggle.addEventListener("change", (e) => {
+      const isDarkMode = e.target.checked;
+      updateThemeAndChart(isDarkMode);      
+    });
+  </script>
+    <style>
+        body {            
+          margin: 50px 100px 0 100px;
+          font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+          background-color: #1e1e2f;
+          color: #eee;        
+          min-height: 100vh;
+        }
+        .header_container h4{
+            margin-top: 0px;
+            font-size: 2rem;
+            text-align: center;
+        }
+        #backBtn {
+        font-size: 1.7rem;
+        padding: 6px 18px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background-color 0.2s ease;
+        background-color: #3498db; /* soft sand */
+        color: #fff; /* deep brown text for contrast */
+        }
+        #backBtn:hover {
+        background-color: hsl(204, 70%, 43%);
+        }
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .search_elements {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+        }
+        #sortSelect {
+            flex: 1;
+            max-width: 120px;
+            padding: 6px 10px;
+            border: 1px solid;
+            border-radius: 4px;
+            font-size: 14px;
+        }       
+
+        #searchBar {
+        padding: 6px 10px;
+        border: 1px solid;
+        border-radius: 4px;
+        font-size: 14px;
+        width: 170px;
+        overflow: hidden;
+        }
+
+        #searchBtn {
+        padding: 6px 12px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background-color 0.2s ease;
+        background-color: #3498db; /* soft sand */
+        color: #fff; /* deep brown text for contrast */
+        }
+        #searchBtn:hover {
+        background-color: hsl(204, 70%, 43%);
+        }
+
+        .search_elements {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        justify-content: center;
+        }
+        
+        .popup {
+          color: rgb(58, 57, 57);
+          display: none;
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          background: #e6e6ec;
+          border: 1px solid #ccc;
+          padding: 20px;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+          z-index: 1001;
+          width: 400px;
+          max-width: 90%;
+          border-radius: 8px;
+        }
+        .popup-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+        .popup-content {
+          margin-top: 15px;
+        }
+        .popup .closeBtn {
+        padding: 6px 12px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background-color 0.2s ease;
+        background-color: #3498db; 
+        color: #fff; 
+        }
+        .closeBtn:hover {
+        background-color: hsl(204, 70%, 43%);
+        }
+        .popupBtns{
+            display: flex;
+            justify-content: space-between;            
+        }
+        #saveBtn, #editBtn, #deleteBtn{
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+        #saveBtn {
+        background-color: #4CAF50; /* Green */
+        color: white;
+        }
+        #saveBtn:hover {
+        background-color: #45a049; /* Darker Green */
+        }
+        #editBtn {
+        background-color: #007BFF; /* Blue */
+        color: white;
+        }
+        #editBtn:hover {
+        background-color: #0056b3; /* Darker Blue */
+        }
+
+        #deleteBtn {
+        background-color: #f44336; /* Red */
+        color: white;
+        }
+        #deleteBtn:hover {
+        background-color: #e53935; /* Darker Red */
+        }
+
+        .form-row {
+          margin-bottom: 10px;
+        }
+        .form-row label {
+          display: block;
+          font-weight: bold;
+          margin-bottom: 4px;
+        }
+        .form-row input, .form-row textarea {
+          width: 100%;
+          padding: 6px;
+          box-sizing: border-box;
+        }
+        .overlay {
+          position: fixed;
+          top: 0; left: 0; right: 0; bottom: 0;
+          background: rgba(0,0,0,0.4);
+          backdrop-filter: blur(3px);
+          display: none;
+          z-index: 1000;
+        }
+        table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: #2a2a3a;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }        
+
+        th, td {         
+        padding: 12px;
+        text-align: left;
+        color: #ccc;
+        vertical-align: middle;      /* Vertically center */
+        text-align: center;
+        }
+        th {
+        background-color: #1c1c2b;
+        font-weight: bold;
+        }
+        tr:nth-child(even) {
+        background-color: hsl(240, 18%, 18%);
+        }
+        tr:nth-child(odd) {
+        background-color: #2f2f44;
+        }
+        
+        tr:hover {
+        background-color: #3b3b55;
+        }       
+        .name-link {
+          color: hsl(203, 67%, 65%);
+          cursor: pointer;
+          text-decoration: underline;
+        }
+
+
+
+        /* light theme edit */
+        body.light {
+          background-color: #e0c9ae; /* warm dimmed white */
+          color: #3b2f2f;
+        }
+        body.light th,tr {
+        background-color: #3f2e25;
+        color: #ffffff;
+        }
+        body.light tr:nth-child(even) {
+        background-color: #6a5242;       
+        }
+        body.light tr:nth-child(odd) {
+        background-color: #7a5d4f;        
+        }
+        body.light tr:hover {
+        background-color: #8a6b5a;
+        }
+
+        body.light #searchBtn {        
+        background-color: #8a6b5a; 
+        color: #fff; /* deep brown text for contrast */
+        }
+        body.light #searchBtn:hover {
+        background-color: hsl(21, 21%, 40%);
+        }
+        body.light #backBtn {        
+        background-color: #8a6b5a; 
+        color: #fff; /* deep brown text for contrast */
+        }
+        body.light #backBtn:hover {
+        background-color: hsl(21, 21%, 40%);
+        }
+        body.light .closeBtn{
+            background-color: #8a6b5a; 
+            color: #fff; /* deep brown text for contrast */
+        }
+        body.light .closeBtn:hover {
+        background-color: hsl(21, 21%, 40%);
+        }
+        /* end of the light theme */
+
+        body.dark {
+          transition: background 0.5s, color 0.5s;
+        }
+        @media (max-width: 768px) {
+          body{
+            margin-left: 0px;
+            margin-right: 0px;
+            padding: 10px;
+          }
+        }
+
+
+
+        
+
+ 
+        
+      </style>
+</body>
+</html>
