@@ -7,7 +7,7 @@
         exit;
     }    
     echo "<script>window.alert('" . strtoupper(addslashes($_SESSION['username'])) . "');</script>";
-    include ("../front-end/admin-dashboard.html");
+    include ("../front-end/html/admin-dashboard.html");
 
 ?>
 

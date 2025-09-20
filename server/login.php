@@ -2,7 +2,7 @@
 <?php
     session_start();
     // Connect to DB
-    $conn = mysqli_connect("localhost", "root", "1234", "login_test");
+    $conn = mysqli_connect("localhost", "root", "1234", "eduflow");
 
     if (!$conn) {
         die("Connection failed: " . mysqli_connect_error());
@@ -17,7 +17,7 @@
             echo "<script>window.alert('Please enter the Password');</script>";
         } else {
             // Use prepared statement
-            $stmt = mysqli_prepare($conn, "SELECT password FROM users WHERE username = ?");
+            $stmt = mysqli_prepare($conn, "SELECT password FROM login WHERE username = ?");
             mysqli_stmt_bind_param($stmt, "s", $username);
             mysqli_stmt_execute($stmt);
             mysqli_stmt_store_result($stmt);
@@ -54,8 +54,6 @@
 
     mysqli_close($conn);
 ?>
-
-
 
 <!DOCTYPE html>
 <html lang="en">
