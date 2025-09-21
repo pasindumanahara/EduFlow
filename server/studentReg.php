@@ -1,53 +1,82 @@
-<?php 
+<?php
+    // studentReg.php
+    require_once 'db.php';
+    require_once 'helpers.php';
+    /*
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        http_response_code(405);
+        exit('Method not allowed');
+    }*/
 
-    // Database connection
-    $pdo = new PDO("mysql:host=localhost;dbname=eduflow", "root", "1234");
+    $fname = trim($_POST['fname'] ?? '');
+    $lname = trim($_POST['lname'] ?? '');
+    $contact = trim($_POST['contactInfo'] ?? '');
+    $nic = trim($_POST['nicNumber'] ?? '');
+    $email = trim($_POST['email'] ?? '');
+    $address = trim($_POST['address'] ?? '');
+    $gender = $_POST['gender_select'] ?? '';
+    $qualification = $_POST['educationQualifications'] ?? '';
+    $username = trim($_POST['username'] ?? '');
+    $password = $_POST['password'] ?? '';
 
-    // Get form data
-    $fname = $_POST['fname'];
-    $lname = $_POST['lname'];
-    $contacts = $_POST['contactInfo'];
-    $nic = $_POST['nicNumber'];
-    $email = $_POST['email'];
-    $address = $_POST['address'];
-    $gender_g_id = ($_POST['gender_select'] == 'male') ? 1 : (($_POST['gender_select'] == 'female') ? 2 : 3);
-    $education = $_POST['educationQualifications'];
-
-    $username = $_POST['username'];
-    $password = $_POST['password'];
-
-    // 1️⃣ Hash the password
-    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+    if (!$fname || !$lname || !$contact || !$nic || !$email || !$address || !$gender || !$qualification || !$username || !$password) {
+        exit('All fields are required.');
+    }
 
     try {
+        // Map gender name to gender_id
+        $stmt = $pdo->prepare("SELECT gender_id FROM genders WHERE gender_name = :g");
+        $stmt->execute([':g' => $gender]);
+        $g = $stmt->fetchColumn();
+        if (!$g) throw new Exception("Invalid gender selected.");
+
+        // Map qualification code to id
+        $stmt = $pdo->prepare("SELECT qualification_id FROM education_qualifications WHERE qualification_code = :qc");
+        $stmt->execute([':qc' => $qualification]);
+        $q = $stmt->fetchColumn();
+        if (!$q) throw new Exception("Invalid qualification selected.");
+
+        // Start transaction
         $pdo->beginTransaction();
 
-        // 2️⃣ Insert into login
-        $stmt = $pdo->prepare("INSERT INTO login (username, password, role) VALUES (?, ?, 'student')");
-        $stmt->execute([$username, $hashedPassword]);
-        $login_id = $pdo->lastInsertId();
+        // 1) create user (hash password)
+        $pwHash = password_hash($password, PASSWORD_DEFAULT);
+        $stmt = $pdo->prepare("INSERT INTO users (username, password_hash, role) VALUES (:u, :p, 'student')");
+        $stmt->execute([':u' => $username, ':p' => $pwHash]);
+        $userId = (int)$pdo->lastInsertId();
 
-        // 3️⃣ Generate student ID (example: STU + auto_increment padded)
-        $stmt = $pdo->query("SELECT AUTO_INCREMENT FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'student' AND TABLE_SCHEMA = DATABASE()");
-        $nextId = $stmt->fetchColumn();
-        $stu_id = 'STU' . str_pad($nextId, 4, '0', STR_PAD_LEFT);
+        // 2) generate stu_id e.g., STU0001
+        $stuCode = generateNextCode($pdo, 'students', 'stu_id', 'STU', 4);
 
-        // 4️⃣ Insert into student table
-        $stmt = $pdo->prepare("INSERT INTO student (stu_id, fname, lname, contacts, email, address, nic, gender_g_id, role, user_id) 
-                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'student', ?)");
-        $stmt->execute([$stu_id, $fname, $lname, $contacts, $email, $address, $nic, $gender_g_id, $login_id]);
+        // 3) insert student row
+        $stmt = $pdo->prepare("INSERT INTO students (stu_id, user_id, fname, lname, contact, nic, email, address, gender_id, qualification_id)
+            VALUES (:stu, :uid, :fn, :ln, :ct, :nic, :em, :addr, :gid, :qid)");
+        $stmt->execute([
+            ':stu' => $stuCode,
+            ':uid' => $userId,
+            ':fn' => $fname,
+            ':ln' => $lname,
+            ':ct' => $contact,
+            ':nic' => $nic,
+            ':em' => $email,
+            ':addr' => $address,
+            ':gid' => $g,
+            ':qid' => $q
+        ]);
 
         $pdo->commit();
 
-        echo "Student registered successfully!";
+        // success - redirect to login or student dashboard
+        header('Location: login.php?registered=1');
+        exit;
+
     } catch (Exception $e) {
-        $pdo->rollBack();
-        echo "Error: " . $e->getMessage();
+        if ($pdo->inTransaction()) $pdo->rollBack();
+        // handle duplicates more gracefully in production
+        exit('Registration failed: ' . htmlspecialchars($e->getMessage()));
     }
 
 ?>
-
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -189,7 +218,6 @@
         }, 3000);
       });
       // need to setup send activation email
-
 
   </script>
   <style>
