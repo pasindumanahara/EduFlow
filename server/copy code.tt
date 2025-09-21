@@ -1,0 +1,23 @@
+INSERT INTO users (username, password_hash, role)
+VALUES ('admin01', '$2y$10$HASHEDPASSWORD...', 'admin');
+
+
+-- Step 1: Insert login credentials
+INSERT INTO users (username, password_hash, role) 
+VALUES ('lecturer01', '$2y$10$HASHEDPASSWORD...', 'lecturer');
+
+-- Step 2: Insert lecturer info (link to user_id = 2)
+INSERT INTO lecturers (user_id, fname, lname, contact, nic, email, address, gender_id)
+VALUES (2, 'Alice', 'Smith', '0779876543', '987654321V', 'alice@uni.edu',
+        '45 University Road', 2);
+
+
+// student create
+-- Step 1: Insert login credentials
+INSERT INTO users (username, password_hash, role) 
+VALUES ('john123', '$2y$10$HASHEDPASSWORD...', 'student');
+
+-- Step 2: Insert student personal info (link to user_id = 1)
+INSERT INTO students (user_id, fname, lname, contact, nic, email, address, gender_id, qualification_id)
+VALUES (1, 'John', 'Doe', '0712345678', '123456789V', 'john@example.com',
+        '123 Main St, City', 1, 3);

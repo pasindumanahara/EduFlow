@@ -17,7 +17,7 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
     }
 }
 
-// show server-side login error (set by login.php) and clear it
+// show server-side login error (set by ../server/login.php) and clear it
 $loginError = $_SESSION['login_error'] ?? null;
 unset($_SESSION['login_error']);
 ?>
@@ -75,7 +75,7 @@ unset($_SESSION['login_error']);
     <!-- display server-side error if any -->
     <div id="message"><?= $loginError ? htmlspecialchars($loginError) : '' ?></div>
 
-    <form id="loginForm" method="post" action="login.php" autocomplete="off" novalidate>
+    <form id="loginForm" method="post" action="../server/login.php" autocomplete="off" novalidate>
       <div class="input-wrapper">
         <input type="text" id="username" name="username" placeholder="Username" required />
       </div>
@@ -87,7 +87,7 @@ unset($_SESSION['login_error']);
 
       <button type="submit" id="loginBtn">Login</button>
 
-      <!-- If JS is disabled, user will submit the form normally to login.php -->
+      <!-- If JS is disabled, user will submit the form normally to ../server/login.php -->
       <noscript>
         <div style="margin-top:12px; color:#eee; font-size:13px;">JavaScript is disabled — the form will submit normally.</div>
       </noscript>
@@ -132,7 +132,7 @@ unset($_SESSION['login_error']);
     formData.append('password', password.value);
 
     try {
-      const res = await fetch('login.php', {
+      const res = await fetch('../server/login.php', {
         method: 'POST',
         body: formData,
         headers: { 'X-Requested-With': 'XMLHttpRequest' } // signal AJAX request to server
