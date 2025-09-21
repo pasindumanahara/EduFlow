@@ -1,113 +1,59 @@
 <?php
-// ../server/login.php
+// login.php
 session_start();
-require_once __DIR__ . '/db.php'; // adjust path if needed
+require_once __DIR__ . '/db.php'; // Database connection
 
-// Basic rate-limiting using session (adjust logic for production)
-if (!isset($_SESSION['login_attempts'])) $_SESSION['login_attempts'] = 0;
-if ($_SESSION['login_attempts'] >= 10) {
-    // Too many attempts — block
-    $resp = ['success' => false, 'message' => 'Too many login attempts. Try again later.'];
-    if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) &&
-        strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
-        header('Content-Type: application/json');
-        echo json_encode($resp);
-        exit;
-    } else {
-        $_SESSION['login_error'] = $resp['message'];
-        $back = $_SERVER['HTTP_REFERER'] ?? '../public/index.php';
-        header('Location: ' . $back);
-        exit;
-    }
-}
-
+// Only allow POST requests
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    http_response_code(405);
+    http_response_code(405); // Method Not Allowed
     exit('Method not allowed');
 }
 
+// Collect form data
 $username = trim($_POST['username'] ?? '');
 $password = $_POST['password'] ?? '';
 
-// basic validation
+// Simple validation
 if ($username === '' || $password === '') {
-    $resp = ['success' => false, 'message' => 'Username and password are required.'];
-    if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) &&
-        strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
-        header('Content-Type: application/json');
-        echo json_encode($resp);
-        exit;
-    } else {
-        $_SESSION['login_error'] = $resp['message'];
-        $back = $_SERVER['HTTP_REFERER'] ?? '../public/index.php';
-        header('Location: ' . $back);
-        exit;
-    }
+    $_SESSION['login_error'] = 'Username and password are required.';
+    header('Location: index.php'); // redirect back to login page
+    exit;
 }
 
 try {
+    // Query the user by username
     $stmt = $pdo->prepare('SELECT user_id, password_hash, role FROM users WHERE username = :u LIMIT 1');
     $stmt->execute([':u' => $username]);
     $user = $stmt->fetch();
 
+    // Check if user exists and verify password
     if ($user && password_verify($password, $user['password_hash'])) {
-        // success
-        session_regenerate_id(true);
+        // Login successful
+        session_regenerate_id(true); // Security: avoid session fixation
         $_SESSION['user_id'] = (int)$user['user_id'];
         $_SESSION['role'] = $user['role'];
-        $_SESSION['login_attempts'] = 0;
 
-        // compute redirect target by role
+        // Redirect based on role
         if ($user['role'] === 'student') {
-            $redirect = '../student/student_dashboard.php';
+            header('Location: student_dashboard.php');
         } elseif ($user['role'] === 'lecturer') {
-            $redirect = '../lecturer/lecturer_dashboard.php';
+            header('Location: lecturer_dashboard.php');
         } elseif ($user['role'] === 'admin') {
-            $redirect = '../admin/admin_dashboard.php';
+            header('Location: admin_dashboard.php');
         } else {
-            $redirect = '../index.php';
+            header('Location: index.php'); // fallback if role unknown
         }
-
-        // AJAX response
-        if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) &&
-            strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
-            header('Content-Type: application/json');
-            echo json_encode(['success' => true, 'redirect' => $redirect]);
-            exit;
-        }
-
-        // Non-AJAX: redirect
-        header('Location: ' . $redirect);
         exit;
     } else {
-        // failure
-        $_SESSION['login_attempts']++;
-        $resp = ['success' => false, 'message' => 'Invalid username or password.'];
-
-        if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) &&
-            strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
-            header('Content-Type: application/json');
-            echo json_encode($resp);
-            exit;
-        } else {
-            $_SESSION['login_error'] = $resp['message'];
-            $back = $_SERVER['HTTP_REFERER'] ?? '../public/index.php';
-            header('Location: ' . $back);
-            exit;
-        }
+        // Invalid login
+        $_SESSION['login_error'] = 'Invalid username or password.';
+        header('Location: index.php');
+        exit;
     }
 } catch (Exception $e) {
+    // Server/DB error
     error_log('Login error: ' . $e->getMessage());
-    $resp = ['success' => false, 'message' => 'Server error. Try again later.'];
-    if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) &&
-        strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
-        header('Content-Type: application/json');
-        echo json_encode($resp);
-        exit;
-    } else {
-        $_SESSION['login_error'] = $resp['message'];
-        $back = $_SERVER['HTTP_REFERER'] ?? '../public/index.php';
-        header('Location: ' . $back);
-        exit;
-    }
+    $_SESSION['login_error'] = 'Server error. Try again later.';
+    header('Location: index.php');
+    exit;
 }
