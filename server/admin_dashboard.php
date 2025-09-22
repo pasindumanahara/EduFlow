@@ -1,14 +1,24 @@
 <?php
-    session_start();
+    session_start();    
+    require 'db.php';
+    if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit;
+}
+    // student count
+    $stmt1 = $pdo->prepare("SELECT COUNT(*) FROM students");
+    $stmt1->execute();
+    $studentsCount = $stmt1->fetchColumn();
+    // lecturers count
+    $stmt2 = $pdo->prepare("SELECT COUNT(*) FROM lecturers");
+    $stmt2->execute();
+    $lecturersCount = $stmt2->fetchColumn();  
 ?>
 
-
 <script>
-  // displaying the login name in dashboard  
-  let user = "<?php echo strtoupper(addslashes($_SESSION['username'])); ?>";
-  document.getElementById("adminName").innerHTML = "Logged in as <strong>$user</strong>";
+    // Show welcome alert
+    console.log("Welcome, <?php echo addslashes($username); ?>! Your role is <?php echo addslashes($role); ?>.");
 </script>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -66,8 +76,8 @@
   <div class="main-content">
     
     <div class="top-bar">
-      <h1>Dashboard</h1>
-      <div class="admin" id="adminName">Logged in as <strong>Admin</strong></div>
+      <h1 id="test">Dashboard</h1>
+      <div class="admin">Logged in as <strong>Admin</strong></div>
     </div>
   
     <div class="cards">
@@ -251,7 +261,6 @@
           } catch(e){}
         }
       }
-
       /* start things */
       loadActiveUsers();
       setInterval(loadActiveUsers, 10000); // update visible count every 10s
@@ -259,28 +268,7 @@
       setInterval(sendHeartbeat, 60000); // ping every 60s
 
       window.addEventListener('beforeunload', sendLogoutBeacon);
-      ////////////////////////////////////////////////
       
-     function updateCount(tableName, elementId) {
-      fetch(`count.php?table=${tableName}`)
-        .then(response => response.json())
-        .then(data => {
-          if (data.count !== undefined) {
-            document.getElementById(elementId).innerHTML = data.count;
-          } else {
-            document.getElementById(elementId).innerHTML = "Error";
-            console.error(data.error);
-          }
-        })
-        .catch(error => {
-          document.getElementById(elementId).innerHTML = "Error";
-          console.error("Fetch error:", error);
-        });
-      }
-      ;
-      updateCount("lecturers", "lecturers-count");
-      updateCount("students", "students-count");
-
   </script>
 
   <style>            
