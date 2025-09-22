@@ -1,11 +1,5 @@
 <?php
     session_start();
-
-    echo "hello";    
-    //echo "<script>window.alert('" . strtoupper(addslashes($_SESSION['username'])) . "');</script>";
-    //include ("../front-end/html/admin-dashboard.html");
-
-
 ?>
 
 
@@ -82,7 +76,7 @@
           <img src="../resources/logo.png" alt="">
           <div>
             <h3>Students</h3>
-            <p id="totalStudents">ERROR</p>
+            <p id="students-count"></p>
           </div>
         </div>
       </div>
@@ -91,7 +85,7 @@
           <img src="../resources/logo.png" alt="">
           <div>
             <h3>Lecturers</h3>
-            <p id="totslLecturers">ERROR</p>
+            <p id="lecturers-count"></p>
           </div>
         </div>
       </div>
@@ -104,16 +98,7 @@
             <p id="activeUsers" style="display: inline;">ERROR</p>
           </div>
         </div>
-      </div>
-      <div class="card">
-        <div class="innerCard">
-          <img src="../resources/logo.png" alt="">
-          <div>
-            <h3>Error</h3>
-            <p>$12,500</p>
-          </div>
-        </div>
-      </div>
+      </div>      
     </div> 
     <!--chart-->
     
@@ -274,30 +259,27 @@
       setInterval(sendHeartbeat, 60000); // ping every 60s
 
       window.addEventListener('beforeunload', sendLogoutBeacon);
-
-      function getCount(tableName, elementId) {
-          fetch(`count.php?table=${tableName}`)
-              .then(response => response.json())
-              .then(data => {
-                  if (data.count !== undefined) {
-                      document.getElementById(elementId).innerHTML = data.count;
-                  } else {
-                      document.getElementById(elementId).innerHTML = "Error";
-                      console.error(data.error);
-                  }
-              })
-              .catch(error => {
-                  document.getElementById(elementId).innerHTML = "Error";
-                  console.error('Error:', error);
-              });
+      ////////////////////////////////////////////////
+      
+     function updateCount(tableName, elementId) {
+      fetch(`count.php?table=${tableName}`)
+        .then(response => response.json())
+        .then(data => {
+          if (data.count !== undefined) {
+            document.getElementById(elementId).innerHTML = data.count;
+          } else {
+            document.getElementById(elementId).innerHTML = "Error";
+            console.error(data.error);
+          }
+        })
+        .catch(error => {
+          document.getElementById(elementId).innerHTML = "Error";
+          console.error("Fetch error:", error);
+        });
       }
-
-      // Call it for both tables
-      getCount('student', 'totalStudents');
-      getCount('lecturer', 'totalLecturers');
-
-
-
+      ;
+      updateCount("lecturers", "lecturers-count");
+      updateCount("students", "students-count");
 
   </script>
 
@@ -503,7 +485,8 @@
           display: flex;
           gap: 20px;
           flex-wrap: wrap;
-          margin-bottom: 30px;
+          margin-bottom: 30px;          
+          justify-content: center;            
         }
 
         .card {
@@ -515,9 +498,12 @@
           max-width: 400px;
           min-width: 150px;
           box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+          
+          display: flex;
+          justify-content: center;
         }
         .cards img{
-          width: 25%;
+          width: 30%;
           display: inline;
           
         }
@@ -528,8 +514,8 @@
         }
 
         .innerCard img {
-          width: 80px;
-          height: 80px;
+          width: 100px;
+          height: 100px;
           object-fit: contain;
         }
 

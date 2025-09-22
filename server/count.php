@@ -1,6 +1,6 @@
 <?php
 // count.php
-include 'dp.php'; // this file already has $conn (your mysqli connection)
+include 'dp.php'; // contains $conn (mysqli connection)
 
 header('Content-Type: application/json');
 
@@ -12,8 +12,8 @@ if (!isset($_GET['table'])) {
 
 $table = $_GET['table'];
 
-// Sanitize table name (basic whitelist for security)
-$allowed_tables = ['users', 'lecturers']; // add your actual table names here
+// Whitelist tables for safety
+$allowed_tables = ['users', 'lecturers', 'students']; // add yours here
 if (!in_array($table, $allowed_tables)) {
     echo json_encode(['error' => 'Invalid table']);
     exit;
