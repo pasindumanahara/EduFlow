@@ -70,14 +70,7 @@
   </div>
 
   <div class="main-content">
-    <!---->
-    <div class="toggle-wrapper">
-      <label class="switch">
-        <input type="checkbox" id="fancyToggle">
-        <span class="slider"></span>
-      </label>
-    </div>
-    <!---->
+    
     <div class="top-bar">
       <h1>Dashboard</h1>
       <div class="admin" id="adminName">Logged in as <strong>Admin</strong></div>
@@ -182,37 +175,38 @@
     }
     
 
-    // draw the donut chart
-    const toggle = document.getElementById("fancyToggle");
+      // draw the donut chart
     const canvas = document.getElementById("donutChart");
     const ctx = canvas.getContext("2d");
+
+    // Replace these with dynamic values later if needed
     const boysCount = 65;
     const girlsCount = 35;
 
     function getColors(isDark) {
-      // Different colors for light and dark modes
+      // Pick one theme only since toggle is gone
       return isDark
         ? ['#2176aa', '#85c3ee']   // Dark mode colors
-        : ['#2f2219', '#9b6e4d '];  // Light mode colors
+        : ['#2f2219', '#9b6e4d'];  // Light mode colors
     }
-
 
     function drawDonutChart(ctx, data, colors, x, y, radius, cutout) {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    const total = data.reduce((sum, value) => sum + value, 0);
-    let startAngle = -0.5 * Math.PI;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const total = data.reduce((sum, value) => sum + value, 0);
+      let startAngle = -0.5 * Math.PI;
 
-    data.forEach((value, index) => {
-      const sliceAngle = (value / total) * 2 * Math.PI;
-      ctx.beginPath();
-      ctx.arc(x, y, radius, startAngle, startAngle + sliceAngle);
-      ctx.arc(x, y, radius - cutout, startAngle + sliceAngle, startAngle, true);
-      ctx.closePath();
-      ctx.fillStyle = colors[index];
-      ctx.fill();
-      startAngle += sliceAngle;
+      data.forEach((value, index) => {
+        const sliceAngle = (value / total) * 2 * Math.PI;
+        ctx.beginPath();
+        ctx.arc(x, y, radius, startAngle, startAngle + sliceAngle);
+        ctx.arc(x, y, radius - cutout, startAngle + sliceAngle, startAngle, true);
+        ctx.closePath();
+        ctx.fillStyle = colors[index];
+        ctx.fill();
+        startAngle += sliceAngle;
       });
     }
+
     // legend colors
     function updateLegendColors(isDark) {
       const [boyColor, girlColor] = getColors(isDark);
@@ -222,34 +216,18 @@
       if (girlLegend) girlLegend.style.backgroundColor = girlColor;
     }
 
-    function updateThemeAndChart(isDark) {
-      document.body.classList.toggle("dark", isDark);
-      document.body.classList.toggle("light", !isDark);
-      localStorage.setItem("theme", isDark ? "dark" : "light");
-
-      const colors = getColors(isDark);
-      const data = [boysCount, girlsCount];
-      updateLegendColors(isDark); 
-      drawDonutChart(ctx, data, colors, 150, 150, 100, 40);
-      
-    }
-
-    // page theme manager and handle togglind and managing seed for theme change -> chart change
-    // Initial theme on page load
+    // Force one theme (dark or light)
     const savedTheme = localStorage.getItem("theme") || "dark";
     const isDark = savedTheme === "dark";
+
+    // Apply theme class
     document.body.classList.add(savedTheme);
-    document.body.classList.remove(savedTheme === "dark" ? "light" : "dark");
-    toggle.checked = isDark;
-    updateThemeAndChart(isDark);
 
-    // Toggle handler
-    toggle.addEventListener("change", (e) => {
-      const isDarkMode = e.target.checked;
-      updateThemeAndChart(isDarkMode);   
-         
-    });
-
+    // Draw chart
+    const colors = getColors(isDark);
+    const data = [boysCount, girlsCount];
+    updateLegendColors(isDark);
+    drawDonutChart(ctx, data, colors, 150, 150, 100, 40);
 
       /* -- Fetch must send cookies so PHP can read the session -- */
       const ACTIVITY_URL = 'activity.php'; 
@@ -296,6 +274,28 @@
       setInterval(sendHeartbeat, 60000); // ping every 60s
 
       window.addEventListener('beforeunload', sendLogoutBeacon);
+
+      function getCount(tableName, elementId) {
+          fetch(`count.php?table=${tableName}`)
+              .then(response => response.json())
+              .then(data => {
+                  if (data.count !== undefined) {
+                      document.getElementById(elementId).innerHTML = data.count;
+                  } else {
+                      document.getElementById(elementId).innerHTML = "Error";
+                      console.error(data.error);
+                  }
+              })
+              .catch(error => {
+                  document.getElementById(elementId).innerHTML = "Error";
+                  console.error('Error:', error);
+              });
+      }
+
+      // Call it for both tables
+      getCount('student', 'totalStudents');
+      getCount('lecturer', 'totalLecturers');
+
 
 
 
