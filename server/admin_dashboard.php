@@ -10,9 +10,9 @@
 
 
 <script>
-  // PHP passes session username into JS
+  // displaying the login name in dashboard  
   let user = "<?php echo strtoupper(addslashes($_SESSION['username'])); ?>";
-  document.getElementById("adminName").innerHTML = user;
+  document.getElementById("adminName").innerHTML = "Logged in as <strong>$user</strong>";
 </script>
 
 
@@ -64,8 +64,7 @@
     </div>
 
     <div class="sidebar-footer">
-      <a href="logout.php">Logout</a>    
-      <a href="user-profile.html">Profile</a>
+      <a href="logout.php">Logout</a> 
       <br>
     </div>
   </div>
@@ -81,7 +80,7 @@
     <!---->
     <div class="top-bar">
       <h1>Dashboard</h1>
-      <div class="admin">Logged in as <strong>Admin</strong></div>
+      <div class="admin" id="adminName">Logged in as <strong>Admin</strong></div>
     </div>
   
     <div class="cards">
@@ -109,7 +108,7 @@
           <div>
             <h3>Active Users</h3>
             <p style="display: inline; color: rgb(0, 168, 0);">●</p>
-            <p id="totalActiveUsers" style="display: inline;">ERROR</p>
+            <p id="activeUsers" style="display: inline;">ERROR</p>
           </div>
         </div>
       </div>
@@ -247,8 +246,59 @@
     // Toggle handler
     toggle.addEventListener("change", (e) => {
       const isDarkMode = e.target.checked;
-      updateThemeAndChart(isDarkMode);      
+      updateThemeAndChart(isDarkMode);   
+         
     });
+
+
+      /* -- Fetch must send cookies so PHP can read the session -- */
+      const ACTIVITY_URL = 'activity.php'; 
+
+      // load current count
+      async function loadActiveUsers(){
+        try {
+          const res = await fetch(`${ACTIVITY_URL}?action=count`, { credentials: 'same-origin' });
+          const data = await res.json();
+          document.getElementById('activeUsers').textContent = data.count ?? 0;
+        } catch (err) {
+          console.error('loadActiveUsers error', err);
+        }
+      }
+
+      // heartbeat: tell server we're still active
+      function sendHeartbeat(){
+        fetch(`${ACTIVITY_URL}?action=update`, {
+          method: 'POST',
+          credentials: 'same-origin'
+        }).catch(()=>{/* ignore network errors */});
+      }
+
+      // logout / tab close handler
+      function sendLogoutBeacon(){
+        // sendBeacon uses POST and is good for unload
+        const url = `${ACTIVITY_URL}?action=logout`;
+        if (navigator.sendBeacon) {
+          navigator.sendBeacon(url);
+        } else {
+          // fallback: synchronous XHR (not ideal but works)
+          try {
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', url, false); // false => synchronous
+            xhr.send(null);
+          } catch(e){}
+        }
+      }
+
+      /* start things */
+      loadActiveUsers();
+      setInterval(loadActiveUsers, 10000); // update visible count every 10s
+      sendHeartbeat();
+      setInterval(sendHeartbeat, 60000); // ping every 60s
+
+      window.addEventListener('beforeunload', sendLogoutBeacon);
+
+
+
   </script>
 
   <style>            
@@ -538,118 +588,122 @@
         /* dark light switch */
         /* Light Theme: Brown + Dimmed White Palette */
 
+        /* Light Theme: Soft White + Light Blue Palette */
         body.light {
-          background-color: hsl(32, 44%, 78%); /* warm dimmed white */
-          color: #3b2f2f;
-
+          background-color: #f5f8fc; /* very light bluish white */
+          color: #1e2a3a; /* dark slate text */
         }
-        
+
         body.light .sidebar {
-          background-color: hsl(27, 25%, 28%); /* darker, earthy brown */
-          border-right: 1px solid #3e2f25;
-        }
-        body.light .top-bar h1{
-          color: #2e231b;
-        }
-        body.light .top-bar{
-          color: #2e231b;
+          background-color: #e6ecf5; /* pale bluish gray */
+          border-right: 1px solid #cbd5e0;
         }
 
-        body.light .top-bar .admin{
-          color: #2e231b;
+        body.light .top-bar h1 {
+          color: #1e2a3a;
         }
-
+        body.light .top-bar {
+          color: #1e2a3a;
+        }
+        body.light .top-bar .admin {
+          color: #2f3d4d;
+        }
 
         body.light .sidebar h2 {
-          color: #f3ece7;
+          color: #2f3d4d;
         }
 
         body.light .sidebar a {
-          color: #e0d6cc;
+          color: #3d4f65;
         }
 
         body.light .sidebar a:hover,
         body.light .sidebar a.active {
-          background-color: #7a5e4d; /* slightly lighter brown on hover */
-          border-left: 4px solid #c69c6d;
-          color: #ffffff;
+          background-color: #d4e2f5; /* soft blue hover */  
+          border-left: 4px solid #3498db;
+          color: #0f172a;
         }
 
+        /* Logo background - subtle bluish tint */
         body.light .logo {
-          background-color: #5a4636;
-          border-bottom: 1px solid #3e2f25;
+          background-color: #3a3a5aff; /* soft light blue */
+          border-bottom: 1px solid #b7c9e4;
         }
+
+        /* Card background - light bluish panel */
+        body.light .card {
+          background-color: #3a3a5aff ; /* pale blue card */
+          color: #1e2a3a;
+          border-radius: 12px;
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        body.light .card h3 {
+          color: #e6ecf5 ;
+        }
+
+        body.light .card p {
+          color: #3498db; /* keep accent */
+        }
+
 
         body.light .menu-title {
-          background-color: hsl(27, 25%, 32%);
-          color: #f3ece7;
+          background-color: #dbe4f1;
+          color: #1e2a3a;
         }
 
         body.light .menu-title:hover,
         body.light .menu-title a.active {
-          background-color: hsl(23, 23%, 39%);
-          border-left: 4px solid #c69c6d;
-          color: #ffffff;
+          background-color: #c8daef;
+          border-left: 4px solid #3498db;
+          color: #0f172a;
         }
 
         body.light .menu-content {
-          background-color: hsl(24, 23%, 26%);
+          background-color: #edf2fa;
         }
 
         body.light .menu-content a {
-          color: hsl(28, 36%, 91%);
+          color: #334155;
         }
 
         body.light .menu-content a:hover {
-          background-color: #7a5e4d;
+          background-color: #d4e2f5;
         }
 
         body.light .static-links a {
-          color: #f0e7df;
-          border-bottom: 1px solid #3e2f25;
+          color: #2f3d4d;
+          border-bottom: 1px solid #cbd5e0;
         }
 
         body.light .static-links a:hover {
-          background-color: #7a5e4d;
+          background-color: #d4e2f5;
         }
 
         body.light .sidebar-footer {
-          border-top: 1px solid #3e2f25;
+          border-top: 1px solid #cbd5e0;
         }
 
         body.light .sidebar-footer a {
-          color: #e0d6cc;
+          color: #3d4f65;
         }
 
         body.light .sidebar-footer a:hover {
-          background-color: #7a5e4d;
-        }
-        body.light .card {
-          background-color: #6a5242; /* warm brown tone */
-          color: #f3ece7;
-          border-radius: 12px;
-          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+          background-color: #d4e2f5;
         }
 
-        body.light .card h3 {
-          color: #fdf9f6; /* near-white, clear heading */
+
+        body.light .mobile-toggle {
+          background-color: #3498db;
+          color: #ffffff;
         }
 
-        body.light .card p {
-          color: #ffdb9b; /* warm gold-brown stat color */
+        body.light .charts {
+          color: #1e2a3a;
+          border: 2px solid #cbd5e0;
         }
-        body.light .mobile-toggle{
-          background-color: #6a5242;
-          color: #fdf9f6;
-        }
-        
-        body.light .charts{
-          color: #2e231b;
-          border: 2px solid #6a5242 ;          
-        }
-        
 
-        
+                
 
         /*************END OF THE LIGHT STYLE ********/
         body.dark {

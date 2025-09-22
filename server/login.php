@@ -36,6 +36,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['user_id'] = (int)$user['user_id'];
                 $_SESSION['role'] = $user['role'];
 
+                // mark user as active immediately
+                require 'activity.php';
+                $_GET['action'] = 'update';
+
+
                 if ($user['role'] === 'student') {
                     header("Location: student_dashboard.php");
                 } elseif ($user['role'] === 'lecturer') {
