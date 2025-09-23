@@ -2,9 +2,10 @@
     session_start();    
     require 'db.php';
     if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
-    exit;
-}
+      header("Location: login.php");
+      exit;
+    }
+    $username = $_SESSION['username'];
     // student count
     $stmt1 = $pdo->prepare("SELECT COUNT(*) FROM students");
     $stmt1->execute();
@@ -14,11 +15,6 @@
     $stmt2->execute();
     $lecturersCount = $stmt2->fetchColumn();  
 ?>
-
-<script>
-    // Show welcome alert
-    console.log("Welcome, <?php echo addslashes($username); ?>! Your role is <?php echo addslashes($role); ?>.");
-</script>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -77,7 +73,7 @@
     
     <div class="top-bar">
       <h1 id="test">Dashboard</h1>
-      <div class="admin">Logged in as <strong>Admin</strong></div>
+      <div class="admin" id = 'username'></span></div>
     </div>
   
     <div class="cards">
@@ -131,6 +127,10 @@
   
 
   <script>
+    // loading the username to the admin-dasboard
+    const username = "<?php echo addslashes($username); ?>";
+    document.getElementById("username").innerHTML = `Logged in as <h3 style = " display : inline;">${username}</h3>`;
+  
     function toggleMenu(element) {
       const content = element.nextElementSibling;
       content.style.display = content.style.display === "block" ? "none" : "block";
@@ -271,7 +271,9 @@
       
   </script>
 
-  <style>            
+  <style>     
+        
+       
         body {
           margin: 0;
           font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
