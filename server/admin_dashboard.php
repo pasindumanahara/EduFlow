@@ -49,16 +49,8 @@
       </div>
     </div>
 
-    <div class="menu-section">
-      <div class="menu-title" onclick="toggleMenu(this)">Main Menu 3</div>
-      <div class="menu-content">
-        <a href="#">Demo X</a>
-        <a href="#">Demo Y</a>
-      </div>
-    </div>
-
     <div class="static-links">
-      <a href="#">Static Link 1</a>
+      <a href="">Static Link 1</a>
       <a href="#">Static Link 2</a>
       <a href="#">Static Link 3</a>
     </div>
@@ -73,7 +65,7 @@
     
     <div class="top-bar">
       <h1 id="test">Dashboard</h1>
-      <div class="admin" id = 'username'></span></div>
+      <div class="admin" id = 'username'></div>
     </div>
   
     <div class="cards">
@@ -130,6 +122,13 @@
     // loading the username to the admin-dasboard
     const username = "<?php echo addslashes($username); ?>";
     document.getElementById("username").innerHTML = `Logged in as <h3 style = " display : inline;">${username}</h3>`;
+
+    // loading student and lecturers count to the page
+    const students = "<?php echo addslashes($studentsCount); ?>";
+    document.getElementById("students-count").innerHTML = `${students}`;
+    const lecturers = "<?php echo addslashes($lecturersCount); ?>";
+    document.getElementById("lecturers-count").innerHTML = `${lecturers}`;
+
   
     function toggleMenu(element) {
       const content = element.nextElementSibling;
