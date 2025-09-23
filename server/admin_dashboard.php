@@ -14,6 +14,8 @@
     $stmt2 = $pdo->prepare("SELECT COUNT(*) FROM lecturers");
     $stmt2->execute();
     $lecturersCount = $stmt2->fetchColumn();  
+
+
 ?>
 
 <!DOCTYPE html>
@@ -61,8 +63,7 @@
     </div>
   </div>
 
-  <div class="main-content">
-    
+  <div class="main-content">    
     <div class="top-bar">
       <h1 id="test">Dashboard</h1>
       <div class="admin" id = 'username'></div>
@@ -99,24 +100,35 @@
       </div>      
     </div> 
     <!--chart-->
-    
-      <div class="chart-container" style="transition: 0.2s;">
-        <div class="charts">      
-          <canvas id="donutChart" width="300" height="300"></canvas>
-          <div class="legend">
-            <div class="legend-item" >
-              <div class="legend-color" id="legend-color-boy" ></div>
-              <div class="legend-label"><h3>Boys</h3></div>
+      <div class="cards">
+        <div class="chart-container" style="transition: 0.2s;">
+          <div class="charts">      
+            <canvas id="donutChart" width="300" height="300"></canvas>
+            <div class="legend">
+              <div class="legend-item" >
+                <div class="legend-color" id="legend-color-boy" ></div>
+                <div class="legend-label"><h3>Boys</h3></div>
+              </div>
+              <div class="legend-item">
+                <div class="legend-color" id="legend-color-girl"></div>
+                <div class="legend-label"><h3>Girls</h3></div>
+              </div>
             </div>
-            <div class="legend-item">
-              <div class="legend-color" id="legend-color-girl"></div>
-              <div class="legend-label"><h3>Girls</h3></div>
-            </div>
+          </div>  
+        </div> 
+          <div id="result"></div>
+          <div class="notice">
+            <form id="saveForm">
+              <p id="message">vlkbnfvlik</p>
+              <textarea></textarea><br>
+              <button type="submit">Save</button>
+            </form>
           </div>
-        </div>  
+        </div>      
       </div> 
-    </div>     
-  
+    </div>  
+      
+    
 
   <script>
     // loading the username to the admin-dasboard
@@ -468,6 +480,61 @@
           font-size: 14px;
           color: #aaa;
           margin-right: 10px;
+        }
+        /** notice styles */
+        .notice {          
+          background-color: #2c2c3e;
+          border-radius: 8px;          
+          flex: 1;
+          float: left;
+          max-width: 400px;
+          min-width: 150px;
+          box-shadow: 0 4px 8px rgba(0,0,0,0.3);         
+          justify-content: center;          
+          padding: 10px;
+        }
+        .notice textarea{
+          width: 90%;
+          min-height: 20px;
+          padding: 12px;
+          font-size: 1rem;
+          border: 1px solid #ccc;
+          border-radius: 8px;
+          resize: vertical;
+          outline: none;          
+        }
+        .notice textarea:focus {
+          border-color: #555;
+          box-shadow: 0 0 4px rgba(0, 0, 0, 0.15);
+        }
+        .notice button {
+          color: #1d1d1dff;
+          align-self: flex-start;
+          padding: 8px 18px;
+          font-size: 1rem;
+          font-weight: 500;
+          border: 1px solid #aaa;
+          border-radius: 8px;
+          background: #3498db;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          margin-left: 5px;
+          margin-top: 2px;
+        }
+        .notice button:hover {
+          background-color: hsla(204, 70%, 43%, 1.00);   /* matches your hover menu */          
+          padding-left: 14px;  
+          padding-right: 14px; 
+          } 
+          .notice #message  {
+          padding: 12px 15px;
+          border: 1px solid #ddd;
+          border-radius: 10px;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+          font-size: 1rem;          
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
         }
 
         .cards {
