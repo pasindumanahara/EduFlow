@@ -121,7 +121,7 @@
           <div class="notice">
             <form id="saveForm">
               
-              <p id="message">vlkbnfvlik</p>
+              <p id="message">Empty list!</p>
               <textarea></textarea><br>
               <button type="submit" id = 'submitBtn'>Save</button><br>
               <button id= 'removeBtn'>Remove All</button>

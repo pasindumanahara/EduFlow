@@ -64,7 +64,7 @@ unset($_SESSION['login_error']);
 
 <div class="login-wrapper">
   <div class="logo-section">
-    <img src="logo.png" id="logo" alt="Logo">
+    <img src="../resources/logo.png" id="logo" alt="Logo">
   </div>
 
   <div class="login-container">
