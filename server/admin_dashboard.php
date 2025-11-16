@@ -38,7 +38,7 @@
     <div class="menu-section">
       <div class="menu-title" onclick="toggleMenu(this)">Student Management</div>
       <div class="menu-content">
-        <a href="student-form.html" target="_blank">Student Registration Form</a>
+        <a href="../front-end/html/student-form.html" target="_blank">Student Registration Form</a>
         <a href="data-table-students.html">Student List</a>
         <a href="#">Test Link 3</a>
       </div>
@@ -119,11 +119,10 @@
         </div> 
           <div id="result"></div>
           <div class="notice">
-            <form id="saveForm">
-              
+            <form id="saveForm" action="notice.php" method="post">              
               <p id="message">Empty list!</p>
-              <textarea></textarea><br>
-              <button type="submit" id = 'submitBtn'>Save</button><br>
+              <textarea id="displayNotices" name="message"></textarea><br>
+              <input type="submit" id = 'submitBtn'></button><br>
               <button id= 'removeBtn'>Remove All</button>
             </form>
           </div>

@@ -9,7 +9,7 @@
 <body class="dark">
   <div class="form-container">
     <h2>Student Registration Form</h2>
-    <form onsubmit="displayUserData(event)">
+    <form onsubmit="displayUserData(event)" method="post" action="../server/studentReg.php">
       <div class="form-group" style="display: flex; gap: 12px;">
         <div style="flex: 1;">
           <label for="fname">First Name</label>
@@ -24,11 +24,11 @@
       <div class="form-group" style="display: flex; gap: 12px;">
         <div style="flex: 1;">
             <label for="contactInfo">Contact Information</label>
-            <input type="tel" id="contactInfo" name="contactInfo" placeholder="+94 123-4567"  required/>
+            <input type="tel" id="contactInfo" name="contactInfo" placeholder="+94 123-4567"  required maxlength="10"/>
         </div>
         <div style="flex: 1;">
             <label for="nicNumber">NIC Number</label>
-            <input type="text" id="nicNumber"  placeholder="xxxxxxxxxxxx"  required/>
+            <input type="text" id="nicNumber"  placeholder="xxxxxxxxxxxx"  required maxlength="12"/>
         </div>
       </div>
 
